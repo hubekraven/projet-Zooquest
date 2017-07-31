@@ -1,9 +1,7 @@
 ## projet INFO
-Category: game Development
-Javascript, HTML5
-Author: Huberson Tape
-all right reserve 2016
-## licence MIT
+-Category: game Development
+-Language: Javascript, HTML5 CSS3
+-Author: Huberson Tape
 
 ## About the Game
 ZooQuest is a match 2 type game, made in Phaser (javascript library) during. This project contains only the first 2 levels of the game.
@@ -15,3 +13,4 @@ this first release of the game features
 - 7 diffirents cards types picturings animals
 - 1 trap
 
+## licence MIT

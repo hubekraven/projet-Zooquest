@@ -1,7 +1,7 @@
 ## projet INFO
--Category: game Development
--Language: Javascript, HTML5 CSS3
--Author: Huberson Tape
+- Category: game Development
+- Languages: Javascript, HTML5 CSS3
+- Author: Huberson Tape
 
 ## About the Game
 ZooQuest is a match 2 type game, made in Phaser (javascript library) during. This project contains only the first 2 levels of the game.

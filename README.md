@@ -6,6 +6,12 @@ all right reserve 2016
 ## licence MIT
 
 ## About the Game
-ZooQuest is match 2 type game, made in Phaser (javascript library) during my Multimedia course at College de Maisonneuve. This project contains only the first 2 levels of the game.
+ZooQuest is a match 2 type game, made in Phaser (javascript library) during. This project contains only the first 2 levels of the game.
+the object of the game is to try to get as the highest score possible by matching titles while avoiding the differents traps.
 
+## Features:
+this first realese of the game features
+- 2 levels
+- 7 diffirents cards types picturings animals
+- 1 trap
 

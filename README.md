@@ -10,7 +10,7 @@ ZooQuest is a match 2 type game, made in Phaser (javascript library) during. Thi
 the object of the game is to try to get as the highest score possible by matching titles while avoiding the differents traps.
 
 ## Features:
-this first realese of the game features
+this first release of the game features
 - 2 levels
 - 7 diffirents cards types picturings animals
 - 1 trap

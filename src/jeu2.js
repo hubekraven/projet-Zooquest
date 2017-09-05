@@ -15,7 +15,7 @@ var jouer2 = (function(){
 	var nbMaxPieges;//nombre de piege max
 	var tuileActuel= 'null';
 	var tuilePrecedent= 'null';
-	var minRange=1;
+	var minRange=0;
 	var maxRange=9;
 	var nbInicoeur=3;
 	var cols=7;// (7 max) nombre de colonnes
@@ -94,7 +94,7 @@ var jouer2 = (function(){
 					var nombre =_jeu.rnd.integerInRange(minRange,maxRange);//génére un nombre aleatoire
                     
                     //----- condition de création des pieges du jeu
-						if(nombre==1)
+						if((nombre==0)||(nombre==1))
 						{
 							piege++;
 							if(piege > nbMaxPieges)
@@ -125,8 +125,6 @@ var jouer2 = (function(){
                     tuile=_jeu.add.sprite(cols + 110 * i, rows + 110 * j,'bgTuile');
 					 tuile.texture.renderable = false;//annule la visibilité de la texture. 
 					_tuilePile=_jeu.add.sprite(cols + 110 * i, rows + 110 * j,'coverface');//crée la face arrière des tuiles
-					
-					
 					tuile.idTuile=_idTuile;//cree une nouvelle proprieté a la tuile ppour faciliter son identification
 					tuile.etatActif=true;
 					tuile.faceFace=_tuileFace;//cree une nouvelle proprieté a la tuile pour facilité acces a cette face
@@ -163,7 +161,7 @@ var jouer2 = (function(){
             //--cas ou il y a une seul tuile restante--// 
             if((TabTuiles.length==1)&&(choixJoueur.length==1))
             {
-                if((choixJoueur.idTuile!=='objet1')||(choixJoueur.idTuile!=='objet4'))
+                if((choixJoueur.idTuile!=='objet0')||(choixJoueur.idTuile!=='objet1')||(choixJoueur.idTuile!=='objet4'))
                 {
                     finJeu=true;						
                 }
@@ -228,7 +226,22 @@ var jouer2 = (function(){
                 sprite1.faceCouvert.visible = false;//desactive la cette face de la tuile
                // sprite1.faceFace.visible = false;
 			}
-            
+
+            //cas ou la tuile choisie est une tournade
+            if (sprite1.idTuile == 'objet0') {
+                //this.desactiveClick(),
+                _jeu.time.events.add(300, function () {
+                    sprite1.faceFace.tint = 0x4d0026;
+                }, this.flipface(choixJoueur));
+
+                sprite1.faceCouvert.visible = false; //desactive la face de la tuile
+                sprite1.inputEnabled = false;
+
+                this.melangerTuile(TabTuiles);
+
+                nbclique = 0;
+            }
+
 			//----cas ou la tuile choisie est une Vie
             if(sprite1.idTuile=='objet4')
 			{
@@ -250,25 +263,20 @@ var jouer2 = (function(){
 			}
             
             //----Gestion des des evenement selon le clique
-			if(nbclique==1 )
-			{
-                if((sprite1.idTuile !=='objet1') && (sprite1.idTuile !=='objet4'))
-                {
-                    tuileActuel=tuilesChoisie.pop();//garde la derniere tuile clique dans la variable tuile actuelle
-				    choixJoueur.push(tuileActuel);    
+			 if (nbclique == 1) {
+                if ((sprite1.idTuile !== 'objet1') && (sprite1.idTuile !== 'objet4') && (sprite1.idTuile !== 'objet0')) {
+                    tuileActuel = tuilesChoisie.pop(); //garde la derniere tuile clique dans la variable tuile actuelle
+                    choixJoueur.push(tuileActuel);
                 }
-				
-			}
-			else if (nbclique>1)
-			{
 
-                 if((sprite1.idTuile !=='objet1') && (sprite1.idTuile !=='objet4'))
-                {
-               
+            } else if (nbclique > 1) {
+
+                if ((sprite1.idTuile !== 'objet1') && (sprite1.idTuile !== 'objet4') && (sprite1.idTuile !== 'objet0')) {    
 				tuilePrecedent=tuileActuel;//derniere tuile devient la tuile acutelle
 				tuileActuel=tuilesChoisie.pop();//garde la derniere tuile clique dans la variable tuile actuel
 				}
                 choixJoueur.push(tuileActuel);
+                
 				if(tuileActuel.idTuile!==tuilePrecedent.idTuile)
 				{
 					_jeu.time.events.add(300, function(){ this.flipface(choixJoueur)}, this);
@@ -302,8 +310,6 @@ var jouer2 = (function(){
 				//tuileFace.kill
 				choixJoueur[i].faceFace.tint= 0x4d0026;
 				choixJoueur[i].inputEnabled=false;
-				//choixJoueur[i].etatActif=false;
-				//console.log(choixJoueur[i].faceCache);
 			}
 			
             _jeu.scoreJoueur+=this.contatagePoint(choixJoueur);//compte les point du joeur
@@ -317,7 +323,7 @@ var jouer2 = (function(){
 			
             //---------------TEST FIN--------------//
              var matchPossible= this.compareTuile(TabTuiles);
-                    //console.log("matchPossible: "+matchPossible);	
+            
 					if(matchPossible ==false)
 					{
                        finJeu=false;
@@ -335,8 +341,7 @@ var jouer2 = (function(){
 							_jeu.input.mouse.enabled=false;
 							finJeu=true;	
 						});
-						
-                        //console.log("PLUS DE MATCH");
+
                     }
             
             //---------------TEST FIN--------------//
@@ -455,7 +460,7 @@ var jouer2 = (function(){
 			{
                 if(_TabTuiles[i].inputEnabled)  // Seul les éléments "actifs"
                 {
-                    if((_TabTuiles[i].idTuile!=="objet1")||(_TabTuiles[i].idTuile!=="objet4"))
+                    if((_TabTuiles[i].idTuile!=="objet0")||(_TabTuiles[i].idTuile!=="objet1")||(_TabTuiles[i].idTuile!=="objet4"))
                     {   
                         element= _TabTuiles[i].idTuile;
                         if(nouveauTableau[element] == null)
@@ -485,7 +490,6 @@ var jouer2 = (function(){
             var _TabTuiles=tab;
              var nb=0;
                 for(var i=0; i<_TabTuiles.length; i++){
-                //if(_TabTuiles[i].etatActif)
                 if(_TabTuiles[i].inputEnabled)
                 {	
                    nb++;
@@ -684,7 +688,53 @@ var jouer2 = (function(){
 			_jeu.musique.stop();
 		   _jeu.scoreJoueur;
 		   _jeu.state.start("Perdu");   //redemare le jeu 
-		}
+		},
+        
+        //--- function permet de tirer un nombre aléatoire une seule fois et de melanger la face des tuiles actives
+        
+        melangerTuile: function (tab) {
+            console.log("function MelangerTuile");
+            var _tabFace = []; //garde les faces des elements actives
+            var sortedNum = []; //garde les nombres deja tirés
+            var randNum;
+            var tempTuile;
+            var index = tab.length - 1;
+            var i = index;
+
+            while (i > 0) {
+                randNum = Math.floor((Math.random() * index) + 0);
+                if (sortedNum.indexOf(randNum) < 0) {
+                    sortedNum.push(randNum);
+
+                    if (tab[randNum].inputEnabled) {
+                        _tabFace.push(tab[randNum].idTuile);
+                    }
+                    i--;
+                }
+
+            }
+
+            this.dessineCard(TabTuiles, _tabFace);
+
+        },
+        
+        //-----function redessine les tuiles du tableau passée en paramettre et du tableau des faces passés en paramettre
+        
+        dessineCard: function (tab, tabFace) {
+            var j = 0; //variable iteration dans le tableau des images
+            
+            for (i = 0; i < tab.length; i++) {
+
+                if (tab[i].inputEnabled && tabFace[j] != null) {
+                    //console.log(" Objet " + i + ", Key: " + tab[i].faceFace.key + " idface: " + tab[i].idTuile);//debocage
+                    var face = tabFace[j];
+                    tab[i].faceFace.loadTexture(face);
+                    tab[i].idTuile = face;
+                    j++;
+                }
+            }
+            return tab;
+        }
 	
 	};
     return _jouer2;

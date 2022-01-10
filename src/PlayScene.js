@@ -220,7 +220,7 @@ class PlayScene extends Phaser.Scene {
       let rndNumber = Phaser.Math.Between(this.minRandge,this.maxRandge);//génére un rndNumber aleatoire
       let _idTuile = "objet" + rndNumber;
         
-      let card = new Card(this, ["coverface", _idTuile]);
+      let card = new Card(this);
       cardGroup.push(card)
       // group.create(this.cols + 110 * i+_x,this.rows + 110, card);
     }

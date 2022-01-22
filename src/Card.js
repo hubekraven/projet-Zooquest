@@ -1,11 +1,10 @@
 /*
- * creating a Card object that extends inherite from the Phaser Sprite
+ * creating a Card object that extends inherite from the Phaser Container
  * use "extends" keyword to define the Parent to inherit from
  * use "super" keyword in constructors to access and call functions on an object's parent.
  * It must be called before the "this" keyword can be used
  * Params: 
  *  @scene (Scene)
- *  @imageArray (Array)
  *  @x (Int)
  *  @y (Int)
  * Position the card at x,y. If none is provided the card with be instanciated in the center of the scene
@@ -21,7 +20,7 @@ class Card extends Phaser.GameObjects.Container {
     x = x||scene.game.config.width/2;
     y = y || scene.game.config.height / 2;
     
-    this.animalsList = [
+    this.objectsList = [
       "objet1",
       "objet2",
       "objet3",
@@ -36,24 +35,27 @@ class Card extends Phaser.GameObjects.Container {
       "objet12"
     ]
 
-    const image = this.animalsList[Math.floor(Math.random()*this.animalsList.length)]
+    const image = this.objectsList[Math.floor(Math.random()*this.objectsList.length)]
     
     this.cover = scene.add.sprite(0, 0, "coverface");
     this.cover.setOrigin(0.5);
     this.face = scene.add.image(0, 0, image);
     this.face.setOrigin(0.5);
 
-    this.setPosition(x, y);
-    
-    this.add([this.face, this.cover]);
-  
-    scene.add.existing(this);
-    this.activate();
-    this.flip(scene);
     this.yAxis = new Phaser.Math.Vector3(0, 1, 0);
     this.zAxis = new Phaser.Math.Vector3(0, 0, 1);
     this.isCover = true
     this.isFace = false
+    
+    this.setPosition(x, y);
+    
+    this.add([this.face, this.cover]);
+   
+    //this.flipSound = this.sound.add("flip");
+    scene.add.existing(this);
+    this.activate();
+    this.flip(scene);
+   //this.mainBgSound = scene.get("menu").sonJeu;
   }
   activate() {
     this.setSize(100, 100);
@@ -64,15 +66,17 @@ class Card extends Phaser.GameObjects.Container {
     this.setTint(0x4d0026);
   }
   flip(scene) {
- 
+
 
     this.on("pointerdown", () => {
+       this.scene.sound.play("clickSouris", {volume:1/20});
       this.setScale(0.95);
     });
     this.on("pointerout", () => {
       this.setScale(1);
     });
-     this.on("pointerover", () => {
+    this.on("pointerover", () => {
+    
       this.setScale(1.05);
      });
     
@@ -81,6 +85,7 @@ class Card extends Phaser.GameObjects.Container {
        * for this to work, the tween has to be generate from the scene passed in reference and not from the current class (this), 
        * with "this" tweens will be undefined.
        */
+      
       let originx = this.x;
       let tween1 = scene.tweens.add({
         targets: this,
@@ -92,6 +97,7 @@ class Card extends Phaser.GameObjects.Container {
         repeat: 0,
         yoyo: false,
         onComplete: () => {
+          this.scene.sound.play('flip',{volume:1/4});
           let tween2 = scene.tweens.add({
             targets: this,
             scaleX: 0.01,
@@ -125,6 +131,15 @@ class Card extends Phaser.GameObjects.Container {
      this.face.visible=true
     this.cover.visible=false
     this.isFace =true
+  }
+
+  changeFace(option) {
+    // if (option && option.constructor === Array)
+    //   for(const el of option) {
+    //    this.objectsList.pop(el)
+    //   }
+    const texture = this.objectsList[Math.floor(Math.random()*this.objectsList.length)]
+    this.face.setTexture(texture)
   }
 }
 /*===========flip card CSS expeemple=========

@@ -4,9 +4,9 @@ class PlayScene extends Phaser.Scene {
     //this.minRandge = 0;
     //this.maxRandge = 6;
     this.nbLife = 3;
-    this.cols = 5; // (7 max) nombre de colonnes
-    this.rows = 5; //(7 max)nombre de rangées
     this.nbCliks = 0;
+    this.maxBonus=null //nombre de bonus max
+    this.maxTraps=null //nombre de piege max
   }
   init() {
     this.minRandge = 1;
@@ -216,15 +216,39 @@ class PlayScene extends Phaser.Scene {
     var group = this.add.group();
     const cardGroup = []
     const x = 16
+    this.maxTraps = Math.round(x*0.08)
+    this.maxBonus =Math.round(x*0.06)
+    //this.maxTraps = Math.round((3/x)*10)
     for (let i = 0; i <= x-1; i++ ) {
-      let rndNumber = Phaser.Math.Between(this.minRandge,this.maxRandge);//génére un rndNumber aleatoire
-      let _idTuile = "objet" + rndNumber;
+      //let rndNumber = Phaser.Math.Between(this.minRandge,this.maxRandge);//génére un rndNumber aleatoire
+      //let _idTuile = "objet" + rndNumber;
         
       let card = new Card(this);
-      cardGroup.push(card)
-      // group.create(this.cols + 110 * i+_x,this.rows + 110, card);
-    }
+       //console.log("Card", card)
+      // count number of bombs 
+      switch (card.face.texture.key) {
+        case 'objet1':
+          trap++
+          if (trap > this.maxTraps) card.changeFace()
+          
+          //console.log("checking numbers of traps", trap, this.maxTraps) 
+          break
+        
+        case 'objet4':
+          bonus++
+          if ( bonus > this.maxBonus) card.changeFace()
+          //console.log("checking numbers of Bonus", bonus) 
+          break
+        
+        default:
+          //console.log("CARD FACE", card.face.texture.key)
+        break
+      }
      
+      cardGroup.push(card)
+      group.create(this.cols + 110 * i+_x,this.rows + 110, card);
+    }
+     console.log("CardGroup", cardGroup)
     //anomyme fonction to calculate the center of created element in the grid
     const gridCenter = () => {
       return {
